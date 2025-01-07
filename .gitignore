@@ -11,6 +11,9 @@ dist/
 /dist
 /build
 
+# Bolt
+.bolt/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
