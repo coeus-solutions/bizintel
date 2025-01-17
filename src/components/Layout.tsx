@@ -16,7 +16,7 @@ const Navigation = () => {
       </div>
       
       <div className="space-y-2">
-        <NavLink to="/dashboard" icon={<Home />} label="Dashboard" active={isActive('/dashboard')} />
+        <NavLink to="/dashboard" icon={<Home />} label="Analysis History" active={isActive('/dashboard')} />
         <NavLink to="/profile" icon={<User />} label="Profile" active={isActive('/profile')} />
         <button 
           className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"

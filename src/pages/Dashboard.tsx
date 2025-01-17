@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { PlusCircle, ExternalLink, Loader2 } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
-import { Business } from '../types';
 import { apiRequest } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -199,9 +198,6 @@ export const Dashboard: React.FC = () => {
                     URL
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Last Updated
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -219,14 +215,6 @@ export const Dashboard: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {renderBusinessURL(business.url)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
-                        ${business.status === 'completed' ? 'bg-green-100 text-green-800' : 
-                          business.status === 'analyzing' ? 'bg-blue-100 text-blue-800' : 
-                          'bg-red-100 text-red-800'}`}>
-                        {business.status}
-                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {business.updated_at ? new Date(business.updated_at).toLocaleDateString() : '-'}
