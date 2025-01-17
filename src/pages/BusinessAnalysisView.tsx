@@ -360,6 +360,21 @@ export const BusinessAnalysisView: React.FC = () => {
     );
   };
 
+  const isAllDataLoaded = () => {
+    return !loadingCompetitors && 
+           !loadingMarketInsights && 
+           !loadingFeedback && 
+           !loadingProductsServices &&
+           !competitorsError &&
+           !marketInsightsError &&
+           !feedbackError &&
+           !productsServicesError &&
+           competitors !== null &&
+           marketInsights !== null &&
+           feedback !== null &&
+           productsServices !== null;
+  };
+
   if (!businessId) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -398,8 +413,23 @@ export const BusinessAnalysisView: React.FC = () => {
               </a>
             )}
           </div>
-          <div className="text-sm text-gray-500">
-            Analysis in progress...
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-gray-500">
+              {!isAllDataLoaded() ? 'Analysis in progress...' : 'Analysis completed'}
+            </div>
+            <Button
+              onClick={() => navigate(`/business/${businessId}/pitch`, {
+                state: {
+                  businessName: businessName,
+                  products: productsServices || []
+                }
+              })}
+              disabled={!isAllDataLoaded()}
+              className="ml-4"
+            >
+              <Wand2 className="w-4 h-4 mr-2" />
+              Generate Pitch
+            </Button>
           </div>
         </div>
       </div>

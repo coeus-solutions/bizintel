@@ -426,7 +426,12 @@ export const BusinessDetails: React.FC = () => {
               <div>Updated: {new Date(business.updated_at).toLocaleDateString()}</div>
             </div>
             <Button
-              onClick={() => navigate(`/business/${business.id}/pitch`)}
+              onClick={() => navigate(`/business/${business.id}/pitch`, {
+                state: {
+                  businessName: business.name,
+                  products: productsServices || []
+                }
+              })}
               className="ml-4"
             >
               <Wand2 className="w-4 h-4 mr-2" />

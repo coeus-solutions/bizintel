@@ -140,10 +140,6 @@ export const BusinessAnalysis: React.FC = () => {
             )}
           </Button>
         </form>
-
-        <div className="mt-6 text-sm text-gray-500">
-          <p>Note: The analysis will run in the background. You'll be redirected to the dashboard where you can monitor its progress.</p>
-        </div>
       </div>
     </div>
   );
