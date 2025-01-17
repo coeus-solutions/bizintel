@@ -9,6 +9,7 @@ import { Profile } from './pages/Profile';
 import { Layout } from './components/Layout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { BusinessAnalysis } from './pages/BusinessAnalysis';
+import { BusinessAnalysisView } from './pages/BusinessAnalysisView';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -86,6 +87,13 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <BusinessAnalysis />
+              </Layout>
+            </PrivateRoute>
+          } />
+          <Route path="/business/analysis" element={
+            <PrivateRoute>
+              <Layout>
+                <BusinessAnalysisView />
               </Layout>
             </PrivateRoute>
           } />

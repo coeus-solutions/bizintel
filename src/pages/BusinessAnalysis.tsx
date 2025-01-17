@@ -65,12 +65,12 @@ export const BusinessAnalysis: React.FC = () => {
 
       // Check if response has the expected structure
       if (response && response.business_id && response.status === 'processing') {
-        // Redirect to dashboard after successful submission
-        navigate('/dashboard', { 
+        // Navigate to the analysis view page
+        navigate('/business/analysis', { 
           state: { 
-            message: response.message || 'Business analysis started successfully. You will be notified when it completes.',
-            analysisStarted: true,
-            businessId: response.business_id
+            businessId: response.business_id,
+            businessName: formData.business_name.trim(),
+            businessUrl: formData.business_url.trim()
           }
         });
       } else {

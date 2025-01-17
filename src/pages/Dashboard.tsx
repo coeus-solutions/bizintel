@@ -81,14 +81,25 @@ export const Dashboard: React.FC = () => {
             : !response.data.some(b => b.status === 'analyzing');
 
           if (shouldStopPolling) {
-            navigate(location.pathname, { 
-              replace: true, 
-              state: { 
-                ...state,
-                analysisStarted: false,
-                message: 'Business analysis completed.'
-              } 
-            });
+            const completedBusiness = response.data.find(b => b.id === state.businessId);
+            if (completedBusiness?.status === 'completed') {
+              navigate(`/business/${state.businessId}/details`, { 
+                replace: true,
+                state: { 
+                  fromAnalysis: true,
+                  message: 'Business analysis completed successfully.' 
+                }
+              });
+            } else {
+              navigate(location.pathname, { 
+                replace: true, 
+                state: { 
+                  ...state,
+                  analysisStarted: false,
+                  message: 'Business analysis completed.'
+                } 
+              });
+            }
           }
         }
       } else {
