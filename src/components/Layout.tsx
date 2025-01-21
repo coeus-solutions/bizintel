@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart2, Home, LogOut, User } from 'lucide-react';
+import { BarChart2, Home, LogOut, User, BarChart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Navigation = () => {
@@ -17,6 +17,7 @@ const Navigation = () => {
       
       <div className="space-y-2">
         <NavLink to="/dashboard" icon={<Home />} label="Analysis History" active={isActive('/dashboard')} />
+        <NavLink to="/analytics" icon={<BarChart />} label="Analytics" active={isActive('/analytics')} />
         <NavLink to="/profile" icon={<User />} label="Profile" active={isActive('/profile')} />
         <button 
           className="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
