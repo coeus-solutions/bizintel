@@ -35,6 +35,12 @@ export interface MarketSegment {
   growth_potential: string;
 }
 
+export interface AnalysisMarketInsights {
+  industry_trends: string[];
+  growth_opportunities: string[];
+  market_segments: MarketSegment[];
+}
+
 export interface MarketInsights {
   industry_trends: string;
   growth_opportunities: string;
@@ -128,12 +134,6 @@ export interface AnalysisMarketSegment {
   description: string;
   size: string;
   growth_potential: string;
-}
-
-export interface AnalysisMarketInsights {
-  industry_trends: string[];
-  growth_opportunities: string[];
-  market_segments: AnalysisMarketSegment[];
 }
 
 export interface AnalysisMarketInsightsResponse {

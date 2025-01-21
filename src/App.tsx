@@ -13,6 +13,7 @@ import { BusinessAnalysisView } from './pages/BusinessAnalysisView';
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
 import { Analytics } from './pages/Analytics';
+import { BusinessRoadmap } from './pages/BusinessRoadmap';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -64,6 +65,13 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <BusinessPitch />
+              </Layout>
+            </PrivateRoute>
+          } />
+          <Route path="/business/:id/roadmap" element={
+            <PrivateRoute>
+              <Layout>
+                <BusinessRoadmap />
               </Layout>
             </PrivateRoute>
           } />

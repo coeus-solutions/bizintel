@@ -374,125 +374,96 @@ ${generatedPitch?.recommended_tone}`;
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-3xl w-full h-[90vh] flex flex-col">
             {/* Modal Header */}
-            <div className="p-4 flex justify-between items-center border-b border-gray-200">
+            <div className="p-6 flex justify-between items-center border-b border-gray-200 bg-gradient-to-r from-blue-500 to-indigo-600">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">Generated Sales Pitch</h2>
-                <p className="text-sm text-gray-500 mt-1">For {selectedProduct}</p>
+                <h2 className="text-xl font-semibold text-white">Generated Sales Pitch</h2>
+                <p className="text-blue-100 mt-1">For {selectedProduct}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="primary"
-                  onClick={handleCopyToClipboard}
-                  className="flex items-center gap-1 relative"
-                >
-                  {copySuccess ? (
-                    <>
-                      <span className="text-sm">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      <span className="hidden sm:inline">Copy</span>
-                    </>
-                  )}
-                </Button>
-                <Button
-                  variant="secondary"
                   onClick={handleDownloadPDF}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-2 bg-indigo-900 text-white hover:bg-indigo-800 shadow-sm"
                 >
                   <Download className="w-4 h-4" />
-                  <span className="hidden sm:inline">PDF</span>
+                  <span>Download PDF</span>
                 </Button>
-                {typeof navigator.share === 'function' && (
-                  <Button
-                    variant="secondary"
-                    onClick={handleShare}
-                    className="flex items-center gap-1"
-                  >
-                    <Share2 className="w-4 h-4" />
-                    <span className="hidden sm:inline">Share</span>
-                  </Button>
-                )}
                 <Button
                   variant="outline"
                   onClick={() => setShowModal(false)}
-                  className="p-1.5 hover:bg-gray-100"
+                  className="p-1.5 bg-white/10 hover:bg-white/20 border-white/20 text-white"
                 >
-                  <X className="w-5 h-5 text-gray-500" />
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
             </div>
 
             {/* Modal Content - Scrollable */}
-            <div className="flex-1 overflow-y-auto p-4">
-              <div className="prose max-w-none space-y-4">
+            <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+              <div className="prose max-w-none space-y-6">
                 {/* Summary Section */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Summary</h3>
-                  <p className="text-gray-700 leading-relaxed">{generatedPitch.summary}</p>
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 shadow-sm border border-blue-100">
+                  <h3 className="text-lg font-medium text-blue-900 mb-2">Summary</h3>
+                  <p className="text-blue-800 leading-relaxed">{generatedPitch.summary}</p>
                 </div>
-                
+
                 {/* Key Points Section */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Key Points</h3>
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide">
-                        Value Proposition
-                      </h4>
-                      <ul className="list-disc list-outside ml-4 space-y-1.5">
-                        {generatedPitch.key_points.value_proposition.map((point, index) => (
-                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide">
-                        Benefits
-                      </h4>
-                      <ul className="list-disc list-outside ml-4 space-y-1.5">
-                        {generatedPitch.key_points.benefits.map((point, index) => (
-                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide">
-                        Differentiators
-                      </h4>
-                      <ul className="list-disc list-outside ml-4 space-y-1.5">
-                        {generatedPitch.key_points.differentiators.map((point, index) => (
-                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                <div className="grid gap-6 sm:grid-cols-3">
+                  <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 shadow-sm border border-emerald-100">
+                    <h4 className="text-sm font-medium text-emerald-900 uppercase tracking-wide mb-3">
+                      Value Proposition
+                    </h4>
+                    <ul className="list-disc list-outside ml-4 space-y-2">
+                      {generatedPitch.key_points.value_proposition.map((point, index) => (
+                        <li key={index} className="text-emerald-800 text-sm leading-relaxed">
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-xl p-6 shadow-sm border border-purple-100">
+                    <h4 className="text-sm font-medium text-purple-900 uppercase tracking-wide mb-3">
+                      Benefits
+                    </h4>
+                    <ul className="list-disc list-outside ml-4 space-y-2">
+                      {generatedPitch.key_points.benefits.map((point, index) => (
+                        <li key={index} className="text-purple-800 text-sm leading-relaxed">
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 shadow-sm border border-amber-100">
+                    <h4 className="text-sm font-medium text-amber-900 uppercase tracking-wide mb-3">
+                      Differentiators
+                    </h4>
+                    <ul className="list-disc list-outside ml-4 space-y-2">
+                      {generatedPitch.key_points.differentiators.map((point, index) => (
+                        <li key={index} className="text-amber-800 text-sm leading-relaxed">
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
 
                 {/* Target Audience Section */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Target Audience</h3>
+                <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl p-6 shadow-sm border border-rose-100">
+                  <h3 className="text-lg font-medium text-rose-900 mb-4">Target Audience</h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                      <h4 className="text-sm font-medium text-rose-900 uppercase tracking-wide mb-2">
                         Primary Audience
                       </h4>
-                      <p className="text-gray-700">{generatedPitch.target_audience.primary.join(', ')}</p>
+                      <p className="text-rose-800">{generatedPitch.target_audience.primary.join(', ')}</p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                      <h4 className="text-sm font-medium text-rose-900 uppercase tracking-wide mb-2">
                         Pain Points
                       </h4>
-                      <ul className="list-disc list-outside ml-4 space-y-1.5">
+                      <ul className="list-disc list-outside ml-4 space-y-2">
                         {generatedPitch.target_audience.pain_points.map((point, index) => (
-                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
+                          <li key={index} className="text-rose-800 text-sm leading-relaxed">
                             {point}
                           </li>
                         ))}
@@ -502,46 +473,46 @@ ${generatedPitch?.recommended_tone}`;
                 </div>
 
                 {/* Competitive Edge Section */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Competitive Edge</h3>
+                <div className="bg-gradient-to-br from-cyan-50 to-sky-50 rounded-xl p-6 shadow-sm border border-cyan-100">
+                  <h3 className="text-lg font-medium text-cyan-900 mb-4">Competitive Edge</h3>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                      <h4 className="text-sm font-medium text-cyan-900 uppercase tracking-wide mb-2">
                         Advantages
                       </h4>
-                      <ul className="list-disc list-outside ml-4 space-y-1.5">
+                      <ul className="list-disc list-outside ml-4 space-y-2">
                         {generatedPitch.competitive_edge.advantages.map((advantage, index) => (
-                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
+                          <li key={index} className="text-cyan-800 text-sm leading-relaxed">
                             {advantage}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                      <h4 className="text-sm font-medium text-cyan-900 uppercase tracking-wide mb-2">
                         Market Position
                       </h4>
-                      <p className="text-gray-700">{generatedPitch.competitive_edge.market_position}</p>
+                      <p className="text-cyan-800">{generatedPitch.competitive_edge.market_position}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Call to Action Section */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Call to Action</h3>
-                  <p className="text-gray-700 leading-relaxed">{generatedPitch.call_to_action}</p>
+                <div className="bg-gradient-to-br from-violet-50 to-indigo-50 rounded-xl p-6 shadow-sm border border-violet-100">
+                  <h3 className="text-lg font-medium text-violet-900 mb-2">Call to Action</h3>
+                  <p className="text-violet-800 leading-relaxed">{generatedPitch.call_to_action}</p>
                 </div>
 
                 {/* Tone Section */}
-                <div className="bg-gray-50 rounded-lg p-4">
+                <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-6 shadow-sm border border-gray-200">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Recommended Tone</h3>
-                  <p className="text-gray-700 leading-relaxed">{generatedPitch.recommended_tone}</p>
+                  <p className="text-gray-800 leading-relaxed">{generatedPitch.recommended_tone}</p>
                 </div>
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-gray-200 bg-gray-50">
+            <div className="p-4 border-t border-gray-200 bg-white">
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-500">
                   Generated on {new Date().toLocaleDateString()}

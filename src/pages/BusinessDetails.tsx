@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Loader2, ArrowLeft, ExternalLink, TrendingUp, Users, MessageSquare, Package, Wand2, RefreshCcw } from 'lucide-react';
+import { Loader2, ArrowLeft, ExternalLink, TrendingUp, Users, MessageSquare, Package, Wand2, RefreshCcw, X, Download, Copy, Share2, Map } from 'lucide-react';
 import { Button } from '../components/Button';
 import { apiRequest } from '../utils/api';
 import { 
@@ -54,6 +54,40 @@ interface LocationState {
   message?: string;
 }
 
+interface RoadmapMilestone {
+  month: number;
+  title: string;
+  description: string;
+  category: string;
+  kpis: string[];
+  action_steps: string[];
+  expected_outcome: string;
+}
+
+interface RoadmapData {
+  summary: string;
+  duration_months: number;
+  milestones: RoadmapMilestone[];
+  key_focus_areas: string[];
+  success_metrics: {
+    revenue: string[];
+    customer: string[];
+    product: string[];
+    market: string[];
+  };
+  resource_requirements: {
+    team: string[];
+    technology: string[];
+    budget: string[];
+  };
+}
+
+interface RoadmapResponse {
+  status: string;
+  message: string;
+  data: RoadmapData;
+}
+
 export const BusinessDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -81,6 +115,11 @@ export const BusinessDetails: React.FC = () => {
   const [productsServices, setProductsServices] = useState<ProductService[] | null>(null);
   const [loadingProductsServices, setLoadingProductsServices] = useState(isFromAnalysis);
   const [productsServicesError, setProductsServicesError] = useState<string | null>(null);
+
+  const [showRoadmapModal, setShowRoadmapModal] = useState(false);
+  const [loadingRoadmap, setLoadingRoadmap] = useState(false);
+  const [roadmapError, setRoadmapError] = useState<string | null>(null);
+  const [roadmapData, setRoadmapData] = useState<RoadmapData | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -206,6 +245,28 @@ export const BusinessDetails: React.FC = () => {
       setProductsServicesError(err instanceof Error ? err.message : 'Failed to fetch products and services');
     } finally {
       setLoadingProductsServices(false);
+    }
+  };
+
+  const handleGenerateRoadmap = async () => {
+    try {
+      setLoadingRoadmap(true);
+      setRoadmapError(null);
+      const response = await apiRequest<RoadmapResponse>(`/business-roadmap?business_id=${businessData?.business.id}&time_horizon_months=6`, {
+        method: 'POST'
+      });
+
+      if (response?.data) {
+        setRoadmapData(response.data);
+        setShowRoadmapModal(true);
+      } else {
+        setRoadmapError('Failed to generate roadmap. Please try again.');
+      }
+    } catch (err) {
+      console.error('Error generating roadmap:', err);
+      setRoadmapError(err instanceof Error ? err.message : 'Failed to generate roadmap');
+    } finally {
+      setLoadingRoadmap(false);
     }
   };
 
@@ -425,19 +486,33 @@ export const BusinessDetails: React.FC = () => {
               <div>Created: {new Date(business.created_at).toLocaleDateString()}</div>
               <div>Updated: {new Date(business.updated_at).toLocaleDateString()}</div>
             </div>
-            <Button
-              onClick={() => navigate(`/business/${business.id}/pitch`, {
-                state: {
-                  businessName: business.name,
-                  products: productsServices || []
-                }
-              })}
-              className="ml-4"
-              disabled={loadingProductsServices}
-            >
-              <Wand2 className="w-4 h-4 mr-2" />
-              {loadingProductsServices ? 'Loading...' : 'Generate Pitch'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => navigate(`/business/${business.id}/roadmap`, {
+                  state: {
+                    businessId: business.id,
+                    businessName: business.name
+                  }
+                })}
+                className="ml-4"
+              >
+                <Map className="w-4 h-4 mr-2" />
+                Generate Roadmap
+              </Button>
+              <Button
+                onClick={() => navigate(`/business/${business.id}/pitch`, {
+                  state: {
+                    businessName: business.name,
+                    products: productsServices || []
+                  }
+                })}
+                className="ml-2"
+                disabled={loadingProductsServices}
+              >
+                <Wand2 className="w-4 h-4 mr-2" />
+                {loadingProductsServices ? 'Loading...' : 'Generate Pitch'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -537,6 +612,176 @@ export const BusinessDetails: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Roadmap Modal */}
+      {showRoadmapModal && roadmapData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="p-4 flex justify-between items-center border-b border-gray-200">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Strategic Roadmap</h2>
+                <p className="text-sm text-gray-500 mt-1">{business.name} - Next {roadmapData.duration_months} Months</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowRoadmapModal(false)}
+                  className="p-1.5 hover:bg-gray-100"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Modal Content - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="prose max-w-none space-y-8">
+                {/* Summary */}
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-blue-900 mb-2">Executive Summary</h3>
+                  <p className="text-blue-800">{roadmapData.summary}</p>
+                </div>
+
+                {/* Key Focus Areas */}
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Key Focus Areas</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {roadmapData.key_focus_areas.map((area, index) => (
+                      <div key={index} className="bg-purple-50 rounded-lg p-4">
+                        <p className="text-purple-900">{area}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Timeline */}
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Implementation Timeline</h3>
+                  <div className="space-y-6">
+                    {roadmapData.milestones.map((milestone, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-6">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="bg-blue-100 text-blue-800 rounded-full px-4 py-1 text-sm font-medium">
+                            Month {milestone.month}
+                          </div>
+                          <div className="bg-gray-100 text-gray-800 rounded-full px-4 py-1 text-sm font-medium">
+                            {milestone.category}
+                          </div>
+                        </div>
+                        <h4 className="text-lg font-medium text-gray-900 mb-2">{milestone.title}</h4>
+                        <p className="text-gray-600 mb-4">{milestone.description}</p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <h5 className="font-medium text-gray-900 mb-2">Action Steps</h5>
+                            <ul className="list-disc list-inside space-y-1">
+                              {milestone.action_steps.map((step, i) => (
+                                <li key={i} className="text-gray-600">{step}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-gray-900 mb-2">KPIs</h5>
+                            <ul className="list-disc list-inside space-y-1">
+                              {milestone.kpis.map((kpi, i) => (
+                                <li key={i} className="text-gray-600">{kpi}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <h5 className="font-medium text-gray-900 mb-2">Expected Outcome</h5>
+                          <p className="text-gray-600">{milestone.expected_outcome}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Success Metrics */}
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Success Metrics</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <h4 className="font-medium text-green-900 mb-2">Revenue Metrics</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {roadmapData.success_metrics.revenue.map((metric, i) => (
+                          <li key={i} className="text-green-800">{metric}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h4 className="font-medium text-blue-900 mb-2">Customer Metrics</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {roadmapData.success_metrics.customer.map((metric, i) => (
+                          <li key={i} className="text-blue-800">{metric}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-purple-50 rounded-lg p-4">
+                      <h4 className="font-medium text-purple-900 mb-2">Product Metrics</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {roadmapData.success_metrics.product.map((metric, i) => (
+                          <li key={i} className="text-purple-800">{metric}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-indigo-50 rounded-lg p-4">
+                      <h4 className="font-medium text-indigo-900 mb-2">Market Metrics</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {roadmapData.success_metrics.market.map((metric, i) => (
+                          <li key={i} className="text-indigo-800">{metric}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Resource Requirements */}
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Resource Requirements</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-amber-50 rounded-lg p-4">
+                      <h4 className="font-medium text-amber-900 mb-2">Team</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {roadmapData.resource_requirements.team.map((req, i) => (
+                          <li key={i} className="text-amber-800">{req}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-cyan-50 rounded-lg p-4">
+                      <h4 className="font-medium text-cyan-900 mb-2">Technology</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {roadmapData.resource_requirements.technology.map((req, i) => (
+                          <li key={i} className="text-cyan-800">{req}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-rose-50 rounded-lg p-4">
+                      <h4 className="font-medium text-rose-900 mb-2">Budget</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {roadmapData.resource_requirements.budget.map((req, i) => (
+                          <li key={i} className="text-rose-800">{req}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowRoadmapModal(false)}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Loader2, ArrowLeft, ExternalLink, TrendingUp, Users, MessageSquare, Package, Wand2, RefreshCcw } from 'lucide-react';
+import { Loader2, ArrowLeft, ExternalLink, TrendingUp, Users, MessageSquare, Package, Wand2, RefreshCcw, Map } from 'lucide-react';
 import { Button } from '../components/Button';
 import { apiRequest } from '../utils/api';
 import { 
@@ -90,17 +90,24 @@ export const BusinessAnalysisView: React.FC = () => {
   const fetchMarketInsights = async (id: string) => {
     try {
       setLoadingMarketInsights(true);
+      setMarketInsightsError(null);
       const response = await apiRequest<AnalysisMarketInsightsResponse>(`/businesses/${id}/market-insights`, {
         method: 'GET',
       });
       if (response?.status === 'success' && response.data) {
-        setMarketInsights(response.data);
+        // Ensure we're setting the data with the correct structure
+        const marketInsightsData: AnalysisMarketInsights = {
+          industry_trends: response.data.industry_trends,
+          growth_opportunities: response.data.growth_opportunities,
+          market_segments: response.data.market_segments
+        };
+        setMarketInsights(marketInsightsData);
       } else {
         setMarketInsightsError('We couldn\'t gather market insights at the moment. Please try again.');
       }
     } catch (err) {
       console.error('Error fetching market insights:', err);
-      setMarketInsightsError('We\'re having trouble analyzing the market insights. Please try again in a few moments.');
+      setMarketInsightsError('We\'re having trouble analyzing the market. Please try again in a few moments.');
     } finally {
       setLoadingMarketInsights(false);
     }
@@ -405,23 +412,38 @@ export const BusinessAnalysisView: React.FC = () => {
               </a>
             )}
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-500">
+          <div className="flex items-center">
+            <div className="text-sm text-gray-500 mr-4">
               {!isAllDataLoaded() ? 'Analysis in progress...' : 'Analysis completed'}
             </div>
-            <Button
-              onClick={() => navigate(`/business/${businessId}/pitch`, {
-                state: {
-                  businessName: businessName,
-                  products: productsServices || []
-                }
-              })}
-              disabled={!isAllDataLoaded()}
-              className="ml-4"
-            >
-              <Wand2 className="w-4 h-4 mr-2" />
-              Generate Pitch
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => navigate(`/business/${businessId}/roadmap`, {
+                  state: {
+                    businessId: businessId,
+                    businessName: businessName
+                  }
+                })}
+                disabled={!isAllDataLoaded()}
+                className="ml-4"
+              >
+                <Map className="w-4 h-4 mr-2" />
+                Generate Roadmap
+              </Button>
+              <Button
+                onClick={() => navigate(`/business/${businessId}/pitch`, {
+                  state: {
+                    businessName: businessName,
+                    products: productsServices || []
+                  }
+                })}
+                disabled={!isAllDataLoaded()}
+                className="ml-2"
+              >
+                <Wand2 className="w-4 h-4 mr-2" />
+                Generate Pitch
+              </Button>
+            </div>
           </div>
         </div>
       </div>
