@@ -433,9 +433,10 @@ export const BusinessDetails: React.FC = () => {
                 }
               })}
               className="ml-4"
+              disabled={loadingProductsServices}
             >
               <Wand2 className="w-4 h-4 mr-2" />
-              Generate Pitch
+              {loadingProductsServices ? 'Loading...' : 'Generate Pitch'}
             </Button>
           </div>
         </div>

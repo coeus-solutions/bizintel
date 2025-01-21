@@ -364,15 +364,7 @@ export const BusinessAnalysisView: React.FC = () => {
     return !loadingCompetitors && 
            !loadingMarketInsights && 
            !loadingFeedback && 
-           !loadingProductsServices &&
-           !competitorsError &&
-           !marketInsightsError &&
-           !feedbackError &&
-           !productsServicesError &&
-           competitors !== null &&
-           marketInsights !== null &&
-           feedback !== null &&
-           productsServices !== null;
+           !loadingProductsServices;
   };
 
   if (!businessId) {

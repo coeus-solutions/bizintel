@@ -4,10 +4,24 @@ import { ArrowLeft, Loader2, X, ChevronDown, Download, Copy, Share2 } from 'luci
 import { Button } from '../components/Button';
 import { apiRequest } from '../utils/api';
 import { ProductService } from '../types';
+import jsPDF from 'jspdf';
 
 interface PitchInfo {
   summary: string;
-  key_points: Record<string, string[]>;
+  key_points: {
+    value_proposition: string[];
+    benefits: string[];
+    differentiators: string[];
+  };
+  target_audience: {
+    primary: string[];
+    pain_points: string[];
+  };
+  competitive_edge: {
+    advantages: string[];
+    market_position: string;
+  };
+  call_to_action: string;
   recommended_tone: string;
 }
 
@@ -30,13 +44,15 @@ export const BusinessPitch: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string>(products[0]?.name || '');
+  const [customProduct, setCustomProduct] = useState<string>('');
   const [generatedPitch, setGeneratedPitch] = useState<PitchInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
 
   const handleGeneratePitch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedProduct) return;
+    const productToUse = products.length > 0 ? selectedProduct : customProduct;
+    if (!productToUse) return;
 
     try {
       setLoading(true);
@@ -45,7 +61,7 @@ export const BusinessPitch: React.FC = () => {
         method: 'POST',
         body: JSON.stringify({
           business_id: id,
-          product_or_service: selectedProduct
+          product_or_service: productToUse
         }),
       });
 
@@ -69,10 +85,27 @@ export const BusinessPitch: React.FC = () => {
 ${generatedPitch?.summary}
 
 Key Points:
-${Object.entries(generatedPitch?.key_points || {})
-  .map(([category, points]) => `${category.toUpperCase()}:
-${points.map(point => `• ${point}`).join('\n')}`)
-  .join('\n\n')}
+Value Proposition:
+${generatedPitch?.key_points.value_proposition.map(point => `• ${point}`).join('\n')}
+
+Benefits:
+${generatedPitch?.key_points.benefits.map(point => `• ${point}`).join('\n')}
+
+Differentiators:
+${generatedPitch?.key_points.differentiators.map(point => `• ${point}`).join('\n')}
+
+Target Audience:
+Primary: ${generatedPitch?.target_audience.primary.join(', ')}
+Pain Points:
+${generatedPitch?.target_audience.pain_points.map(point => `• ${point}`).join('\n')}
+
+Competitive Edge:
+Advantages:
+${generatedPitch?.competitive_edge.advantages.map(point => `• ${point}`).join('\n')}
+Market Position: ${generatedPitch?.competitive_edge.market_position}
+
+Call to Action:
+${generatedPitch?.call_to_action}
 
 Recommended Tone:
 ${generatedPitch?.recommended_tone}`;
@@ -86,9 +119,151 @@ ${generatedPitch?.recommended_tone}`;
   };
 
   const handleDownloadPDF = () => {
-    // This is a placeholder - you'll need to implement actual PDF generation
-    // You could use libraries like jsPDF or html2pdf
-    console.log('Download PDF functionality to be implemented');
+    if (!generatedPitch) return;
+
+    const doc = new jsPDF();
+    const lineHeight = 7;
+    let yPos = 20;
+    const margin = 20;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const maxWidth = pageWidth - 2 * margin;
+
+    // Helper function to check and add new page if needed
+    const checkAndAddPage = (estimatedHeight: number = lineHeight) => {
+      if (yPos + estimatedHeight > pageHeight - margin) {
+        doc.addPage();
+        yPos = 20;
+        return true;
+      }
+      return false;
+    };
+
+    // Helper function to add text with word wrap
+    const addWrappedText = (text: string, fontSize = 12) => {
+      doc.setFontSize(fontSize);
+      const lines = doc.splitTextToSize(text, maxWidth);
+      const textHeight = lines.length * lineHeight;
+      
+      // Check if we need a new page
+      checkAndAddPage(textHeight);
+      
+      doc.text(lines, margin, yPos);
+      yPos += textHeight;
+      return yPos;
+    };
+
+    // Helper function to add bullet points
+    const addBulletPoints = (points: string[]) => {
+      points.forEach(point => {
+        const bulletText = `• ${point}`;
+        const lines = doc.splitTextToSize(bulletText, maxWidth);
+        const pointHeight = lines.length * lineHeight;
+
+        // Check if we need a new page
+        checkAndAddPage(pointHeight);
+
+        doc.text(lines, margin, yPos);
+        yPos += pointHeight;
+      });
+      yPos += lineHeight; // Add extra space after bullet points
+    };
+
+    // Helper function to add a section
+    const addSection = (title: string, content: string | string[], isList = false, isMainTitle = false) => {
+      // Check if we need a new page for the section
+      checkAndAddPage(lineHeight * 3);
+
+      // Add section title
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(isMainTitle ? 16 : 14);
+      doc.text(title, margin, yPos);
+      yPos += lineHeight * 1.5;
+
+      // Add content
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+      
+      if (isList && Array.isArray(content)) {
+        addBulletPoints(content);
+      } else if (typeof content === 'string') {
+        addWrappedText(content);
+      }
+      
+      yPos += lineHeight; // Add space after section
+    };
+
+    // Title
+    addSection(`Sales Pitch for ${selectedProduct}`, '', false, true);
+
+    // Summary
+    addSection('Summary', generatedPitch.summary);
+
+    // Key Points
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text('Key Points', margin, yPos);
+    yPos += lineHeight * 1.5;
+
+    // Value Proposition
+    doc.setFontSize(12);
+    doc.text('Value Proposition:', margin, yPos);
+    yPos += lineHeight;
+    doc.setFont("helvetica", "normal");
+    addBulletPoints(generatedPitch.key_points.value_proposition);
+
+    // Benefits
+    doc.setFont("helvetica", "bold");
+    doc.text('Benefits:', margin, yPos);
+    yPos += lineHeight;
+    doc.setFont("helvetica", "normal");
+    addBulletPoints(generatedPitch.key_points.benefits);
+
+    // Differentiators
+    doc.setFont("helvetica", "bold");
+    doc.text('Differentiators:', margin, yPos);
+    yPos += lineHeight;
+    doc.setFont("helvetica", "normal");
+    addBulletPoints(generatedPitch.key_points.differentiators);
+
+    // Target Audience
+    addSection('Target Audience', '');
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text('Primary Audience:', margin, yPos);
+    yPos += lineHeight;
+    doc.setFont("helvetica", "normal");
+    addWrappedText(generatedPitch.target_audience.primary.join(", "));
+
+    doc.setFont("helvetica", "bold");
+    doc.text('Pain Points:', margin, yPos);
+    yPos += lineHeight;
+    doc.setFont("helvetica", "normal");
+    addBulletPoints(generatedPitch.target_audience.pain_points);
+
+    // Competitive Edge
+    addSection('Competitive Edge', '');
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text('Advantages:', margin, yPos);
+    yPos += lineHeight;
+    doc.setFont("helvetica", "normal");
+    addBulletPoints(generatedPitch.competitive_edge.advantages);
+
+    doc.setFont("helvetica", "bold");
+    doc.text('Market Position:', margin, yPos);
+    yPos += lineHeight;
+    doc.setFont("helvetica", "normal");
+    addWrappedText(generatedPitch.competitive_edge.market_position);
+
+    // Call to Action
+    addSection('Call to Action', generatedPitch.call_to_action);
+
+    // Recommended Tone
+    addSection('Recommended Tone', generatedPitch.recommended_tone);
+
+    // Save the PDF
+    doc.save(`${selectedProduct.toLowerCase().replace(/\s+/g, '-')}-pitch.pdf`);
   };
 
   const handleShare = async () => {
@@ -97,7 +272,6 @@ ${generatedPitch?.recommended_tone}`;
         await navigator.share({
           title: 'Sales Pitch',
           text: `Sales Pitch for ${selectedProduct}`,
-          // You might want to implement a way to share via a URL
           url: window.location.href,
         });
       } catch (err) {
@@ -106,7 +280,7 @@ ${generatedPitch?.recommended_tone}`;
     }
   };
 
-  if (!businessName || products.length === 0) {
+  if (!businessName) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-700">
@@ -142,32 +316,45 @@ ${generatedPitch?.recommended_tone}`;
         <form onSubmit={handleGeneratePitch} className="space-y-4">
           <div>
             <label htmlFor="product" className="block text-sm font-medium text-gray-700 mb-1">
-              Select Product/Service
+              {products.length > 0 ? 'Select Product/Service' : 'Enter Product/Service Name'}
             </label>
-            <div className="relative">
-              <select
+            {products.length > 0 ? (
+              <div className="relative">
+                <select
+                  id="product"
+                  value={selectedProduct}
+                  onChange={(e) => setSelectedProduct(e.target.value)}
+                  className="block w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-8 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 sm:text-sm"
+                  required
+                  disabled={loading}
+                >
+                  {products.map((product) => (
+                    <option key={product.name} value={product.name}>
+                      {product.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                  <ChevronDown className="h-4 w-4" />
+                </div>
+              </div>
+            ) : (
+              <input
+                type="text"
                 id="product"
-                value={selectedProduct}
-                onChange={(e) => setSelectedProduct(e.target.value)}
-                className="block w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 pr-8 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 sm:text-sm"
+                value={customProduct}
+                onChange={(e) => setCustomProduct(e.target.value)}
+                className="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 sm:text-sm"
+                placeholder="Enter the name of the product or service"
                 required
                 disabled={loading}
-              >
-                {products.map((product) => (
-                  <option key={product.name} value={product.name}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                <ChevronDown className="h-4 w-4" />
-              </div>
-            </div>
+              />
+            )}
           </div>
 
           <Button
             type="submit"
-            disabled={loading || !selectedProduct}
+            disabled={loading || (!selectedProduct && !customProduct)}
             className="w-full justify-center py-2.5"
           >
             {loading ? (
@@ -228,11 +415,11 @@ ${generatedPitch?.recommended_tone}`;
                   </Button>
                 )}
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   onClick={() => setShowModal(false)}
-                  className="text-white hover:text-gray-200"
+                  className="p-1.5 hover:bg-gray-100"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5 text-gray-500" />
                 </Button>
               </div>
             </div>
@@ -249,22 +436,100 @@ ${generatedPitch?.recommended_tone}`;
                 {/* Key Points Section */}
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h3 className="text-lg font-medium text-gray-900 mb-3">Key Points</h3>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {Object.entries(generatedPitch.key_points).map(([category, points]) => (
-                      <div key={category} className="space-y-2">
-                        <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide">
-                          {category}
-                        </h4>
-                        <ul className="list-disc list-outside ml-4 space-y-1.5">
-                          {points.map((point, index) => (
-                            <li key={index} className="text-gray-600 text-sm leading-relaxed">
-                              {point}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide">
+                        Value Proposition
+                      </h4>
+                      <ul className="list-disc list-outside ml-4 space-y-1.5">
+                        {generatedPitch.key_points.value_proposition.map((point, index) => (
+                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide">
+                        Benefits
+                      </h4>
+                      <ul className="list-disc list-outside ml-4 space-y-1.5">
+                        {generatedPitch.key_points.benefits.map((point, index) => (
+                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide">
+                        Differentiators
+                      </h4>
+                      <ul className="list-disc list-outside ml-4 space-y-1.5">
+                        {generatedPitch.key_points.differentiators.map((point, index) => (
+                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
+                </div>
+
+                {/* Target Audience Section */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Target Audience</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                        Primary Audience
+                      </h4>
+                      <p className="text-gray-700">{generatedPitch.target_audience.primary.join(', ')}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                        Pain Points
+                      </h4>
+                      <ul className="list-disc list-outside ml-4 space-y-1.5">
+                        {generatedPitch.target_audience.pain_points.map((point, index) => (
+                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Competitive Edge Section */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Competitive Edge</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                        Advantages
+                      </h4>
+                      <ul className="list-disc list-outside ml-4 space-y-1.5">
+                        {generatedPitch.competitive_edge.advantages.map((advantage, index) => (
+                          <li key={index} className="text-gray-600 text-sm leading-relaxed">
+                            {advantage}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 uppercase tracking-wide mb-2">
+                        Market Position
+                      </h4>
+                      <p className="text-gray-700">{generatedPitch.competitive_edge.market_position}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call to Action Section */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Call to Action</h3>
+                  <p className="text-gray-700 leading-relaxed">{generatedPitch.call_to_action}</p>
                 </div>
 
                 {/* Tone Section */}

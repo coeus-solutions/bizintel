@@ -22,7 +22,7 @@ export const Hero = () => {
             </Link>
             <Link to="/login">
               <Button variant="outline" className="text-lg px-8 py-3">
-                View Demo
+                Sign In
               </Button>
             </Link>
           </div>
