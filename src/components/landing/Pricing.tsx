@@ -1,161 +1,149 @@
 import React from 'react';
-import { Check } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { Button } from '../Button';
 import { Link } from 'react-router-dom';
 
+const plans = [
+  {
+    name: "Starter",
+    description: "Perfect for small businesses just getting started",
+    price: "$10",
+    period: "month",
+    features: [
+      "5 business analyses per month",
+      "Basic competitor insights",
+      "Market trends overview",
+      "Basic AI-powered analysis",
+      "Sales pitch generation",
+      "PDF export capability",
+      "Email support"
+    ],
+    cta: "Start Free Trial",
+    highlight: false
+  },
+  {
+    name: "Professional",
+    description: "For growing businesses needing deeper insights",
+    price: "$49",
+    period: "month",
+    features: [
+      "25 business analyses per month",
+      "Advanced competitor tracking",
+      "Detailed market insights",
+      "Growth roadmap generation",
+      "Custom pitch templates",
+      "Priority email support",
+      "API access (100 calls/day)",
+      "Team collaboration (up to 5)"
+    ],
+    cta: "Get Started",
+    highlight: true
+  },
+  {
+    name: "Enterprise",
+    description: "For large organizations requiring custom solutions",
+    price: "Custom",
+    period: "pricing",
+    features: [
+      "Unlimited business analyses",
+      "Real-time competitor monitoring",
+      "Advanced market intelligence",
+      "Custom AI model training",
+      "White-label reports",
+      "24/7 dedicated support",
+      "Full API access",
+      "Custom integrations",
+      "Team collaboration (unlimited)"
+    ],
+    cta: "Contact Sales",
+    highlight: false
+  }
+];
+
 export const Pricing = () => {
   return (
-    <div className="bg-black py-24 relative">
-      {/* Gradient overlay for top */}
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-gray-900 to-transparent"></div>
+    <div className="relative py-24 overflow-hidden">
+      {/* Background gradients */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-blue-50 to-white" />
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDU5LCAxMzAsIDI0NiwgMC4xKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-[0.15]" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center relative">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            Simple, transparent pricing
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="text-center">
+          <div className="inline-flex items-center rounded-full bg-blue-500/10 px-6 py-2 text-blue-600 ring-1 ring-blue-500/20 mb-8">
+            <Sparkles className="mr-2 h-4 w-4" />
+            <span>Simple Pricing</span>
+          </div>
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">
+            Choose Your Plan
           </h2>
-          <p className="mt-4 text-xl text-gray-400">
-            Choose the plan that best fits your business needs
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
+            Get started with our AI-powered business intelligence platform. Scale as you grow.
           </p>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {/* Starter Plan */}
-          <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-colors">
-            <div className="p-8">
-              <h3 className="text-2xl font-semibold text-white">Starter</h3>
-              <p className="mt-2 text-gray-400">Perfect for small businesses just getting started</p>
-              <div className="mt-6">
-                <span className="text-4xl font-bold text-white">$10</span>
-                <span className="text-gray-400">/month</span>
-              </div>
-              <ul className="mt-8 space-y-4">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">5 business analyses per month</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Basic competitor insights</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Market trends overview</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Basic AI-powered analysis</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Email support</span>
-                </li>
-              </ul>
-            </div>
-            <div className="px-6 pb-8">
-              <Link to="/register" className="w-full">
-                <Button className="w-full bg-emerald-500 text-white hover:bg-emerald-600">Start Free Trial</Button>
-              </Link>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-8">
+          {plans.map((plan, index) => (
+            <div 
+              key={index}
+              className={`relative rounded-2xl ${
+                plan.highlight
+                  ? 'bg-gradient-to-b from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/30 border-0 lg:scale-110 lg:-translate-y-4'
+                  : 'bg-white text-gray-900 border border-gray-200'
+              }`}
+            >
+              {plan.highlight && (
+                <div className="absolute -top-5 left-0 right-0 flex justify-center">
+                  <div className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1 text-sm font-medium text-white shadow-lg">
+                    Most Popular
+                  </div>
+                </div>
+              )}
 
-          {/* Professional Plan */}
-          <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border-2 border-indigo-500/50 hover:border-indigo-500 transition-colors relative">
-            <div className="absolute top-0 right-0 bg-indigo-500 text-white px-4 py-1 rounded-bl-lg text-sm font-medium">
-              Popular
-            </div>
-            <div className="p-8">
-              <h3 className="text-2xl font-semibold text-white">Professional</h3>
-              <p className="mt-2 text-gray-400">Ideal for growing businesses needing deeper insights</p>
-              <div className="mt-6">
-                <span className="text-4xl font-bold text-white">$49</span>
-                <span className="text-gray-400">/month</span>
-              </div>
-              <ul className="mt-8 space-y-4">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">20 business analyses per month</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Advanced competitor tracking</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Detailed market segmentation</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Enhanced AI analysis & insights</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Priority email & chat support</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Custom report generation</span>
-                </li>
-              </ul>
-            </div>
-            <div className="px-6 pb-8">
-              <Link to="/register" className="w-full">
-                <Button className="w-full bg-indigo-500 text-white hover:bg-indigo-600">Get Started</Button>
-              </Link>
-            </div>
-          </div>
+              <div className="p-8">
+                <h3 className={`text-2xl font-semibold ${plan.highlight ? 'text-white' : 'text-gray-900'}`}>
+                  {plan.name}
+                </h3>
+                <p className={`mt-2 ${plan.highlight ? 'text-blue-100' : 'text-gray-500'}`}>
+                  {plan.description}
+                </p>
+                <div className="mt-6 flex items-baseline">
+                  <span className={`text-5xl font-bold tracking-tight ${plan.highlight ? 'text-white' : 'text-gray-900'}`}>
+                    {plan.price}
+                  </span>
+                  <span className={`ml-2 text-lg ${plan.highlight ? 'text-blue-100' : 'text-gray-500'}`}>
+                    /{plan.period}
+                  </span>
+                </div>
 
-          {/* Enterprise Plan */}
-          <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-colors">
-            <div className="p-8">
-              <h3 className="text-2xl font-semibold text-white">Enterprise</h3>
-              <p className="mt-2 text-gray-400">For large organizations requiring custom solutions</p>
-              <div className="mt-6">
-                <span className="text-4xl font-bold text-white">Custom</span>
-                <span className="text-gray-400"> pricing</span>
+                <ul className="mt-8 space-y-4">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start">
+                      <Check className={`h-5 w-5 shrink-0 ${plan.highlight ? 'text-blue-200' : 'text-emerald-500'}`} />
+                      <span className={`ml-3 ${plan.highlight ? 'text-blue-100' : 'text-gray-600'}`}>
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="mt-8 space-y-4">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Unlimited business analyses</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Real-time competitor monitoring</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Advanced market intelligence</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Custom AI model training</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">24/7 dedicated support</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">API access</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-emerald-400 mt-0.5" />
-                  <span className="ml-3 text-gray-300">Custom integrations</span>
-                </li>
-              </ul>
+
+              <div className="p-8 pt-0">
+                <Link to="/register" className="w-full">
+                  <Button 
+                    className={`w-full justify-center ${
+                      plan.highlight
+                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                  >
+                    {plan.cta}
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <div className="px-6 pb-8">
-              <Link to="/register" className="w-full">
-                <Button className="w-full bg-gray-600 text-white hover:bg-gray-700">Contact Sales</Button>
-              </Link>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-
-      {/* Gradient overlay for bottom */}
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-900 to-transparent"></div>
     </div>
   );
 }; 
