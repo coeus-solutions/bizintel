@@ -34,15 +34,19 @@ export const Privacy = () => {
           <div className="space-y-8">
             <section>
               <h2 className="text-xl font-semibold mb-4">1. Information We Collect</h2>
-              <p className="text-gray-600 mb-4">
-                We collect information that you provide directly to us, including:
+              <p className="text-gray-600">
+                We collect information that you provide directly to us when you:
               </p>
-              <ul className="list-disc list-inside text-gray-600 space-y-2">
-                <li>Name and contact information</li>
-                <li>Account credentials</li>
-                <li>Business information provided for analysis</li>
-                <li>Payment information when purchasing our services</li>
+              <ul className="list-disc list-inside text-gray-600 space-y-2 mt-2">
+                <li>Create an account or use our services</li>
+                <li>Communicate with our team</li>
+                <li>Submit business information for analysis</li>
+                <li>Provide payment information</li>
+                <li>Share any other information voluntarily</li>
               </ul>
+              <p className="text-gray-600 mt-4">
+                This may include your name, email address, company information, business data, and any other information you choose to provide.
+              </p>
             </section>
 
             <section>
@@ -51,44 +55,57 @@ export const Privacy = () => {
                 We use the information we collect to:
               </p>
               <ul className="list-disc list-inside text-gray-600 space-y-2">
-                <li>Provide and improve our services</li>
+                <li>Provide, maintain, and improve our services</li>
+                <li>Communicate with you about our services</li>
+                <li>Develop new features and products</li>
+                <li>Protect the security and integrity of our platform</li>
                 <li>Process your transactions</li>
-                <li>Send you technical notices and support messages</li>
-                <li>Respond to your comments and questions</li>
+                <li>Analyze and enhance our service delivery</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-4">3. Data Security</h2>
+              <h2 className="text-xl font-semibold mb-4">3. Information Sharing</h2>
               <p className="text-gray-600">
-                We implement appropriate technical and organizational security measures to protect your information. However, no security system is impenetrable and we cannot guarantee the security of our systems 100%.
+                We are committed to protecting your privacy. We do not sell your personal information. We may share your information with trusted third-party service providers who assist us in operating our platform, conducting our business, or serving our users. These service providers have access to your information only to perform specific tasks on our behalf and are obligated to protect your information.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-4">4. Data Retention</h2>
+              <h2 className="text-xl font-semibold mb-4">4. Data Security</h2>
               <p className="text-gray-600">
-                We retain your information for as long as necessary to provide our services and fulfill the purposes outlined in this privacy policy. You can request deletion of your data by contacting us.
+                We implement appropriate technical and organizational security measures to protect your personal information. This includes encryption, secure servers, and regular security assessments. However, please note that no method of transmission over the Internet or electronic storage is 100% secure. While we strive to protect your information, we cannot guarantee absolute security.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold mb-4">5. Your Rights</h2>
               <p className="text-gray-600 mb-4">
-                You have the right to:
+                You have several rights regarding your personal information:
               </p>
               <ul className="list-disc list-inside text-gray-600 space-y-2">
                 <li>Access your personal information</li>
                 <li>Correct inaccurate data</li>
                 <li>Request deletion of your data</li>
-                <li>Object to our use of your data</li>
+                <li>Restrict or object to certain processing activities</li>
+                <li>Export your data in a portable format</li>
               </ul>
+              <p className="text-gray-600 mt-4">
+                To exercise these rights, please contact us using the information provided in the Contact Us section.
+              </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold mb-4">6. Contact Us</h2>
+              <h2 className="text-xl font-semibold mb-4">6. Changes to This Policy</h2>
               <p className="text-gray-600">
-                If you have any questions about this Privacy Policy, please contact us at:
+                We may update this privacy policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any material changes by posting the updated privacy policy on this page and updating the effective date. Your continued use of our services after such modifications constitutes your acknowledgment of the modified policy and agreement to abide by it.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold mb-4">7. Contact Us</h2>
+              <p className="text-gray-600">
+                If you have any questions, concerns, or requests related to this privacy policy or our data practices, please contact us at:
               </p>
               <address className="text-gray-600 mt-2 not-italic">
                 1606 Headway Cir<br />
@@ -96,13 +113,6 @@ export const Privacy = () => {
                 Austin, TX 78754<br />
                 United States
               </address>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-4">7. Changes to This Policy</h2>
-              <p className="text-gray-600">
-                We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the effective date.
-              </p>
             </section>
           </div>
         </div>
