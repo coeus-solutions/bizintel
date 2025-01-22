@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Hero } from '../components/landing/Hero';
 import { Features } from '../components/landing/Features';
+import { Pricing } from '../components/landing/Pricing';
 import { Footer } from '../components/landing/Footer';
 
 export const LandingPage: React.FC = () => {
@@ -31,7 +32,12 @@ export const LandingPage: React.FC = () => {
 
       <main>
         <Hero />
-        <Features />
+        <div id="features">
+          <Features />
+        </div>
+        <div id="pricing">
+          <Pricing />
+        </div>
       </main>
 
       <Footer />

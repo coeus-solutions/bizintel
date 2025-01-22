@@ -20,11 +20,6 @@ export const Profile: React.FC = () => {
             <label className="block text-sm font-medium text-gray-500">Email</label>
             <div className="mt-1 text-lg">{user?.email}</div>
           </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-500">Name</label>
-            <div className="mt-1 text-lg">Demo User</div>
-          </div>
         </div>
       </div>
     </div>

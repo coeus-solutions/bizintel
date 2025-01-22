@@ -9,6 +9,11 @@ import { Profile } from './pages/Profile';
 import { Layout } from './components/Layout';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { BusinessAnalysis } from './pages/BusinessAnalysis';
+import { BusinessAnalysisView } from './pages/BusinessAnalysisView';
+import { Privacy } from './pages/Privacy';
+import { Terms } from './pages/Terms';
+import { Analytics } from './pages/Analytics';
+import { BusinessRoadmap } from './pages/BusinessRoadmap';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -40,6 +45,8 @@ function App() {
               <AuthPage type="register" />
             </PublicRoute>
           } />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/dashboard" element={
             <PrivateRoute>
               <Layout>
@@ -58,6 +65,13 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <BusinessPitch />
+              </Layout>
+            </PrivateRoute>
+          } />
+          <Route path="/business/:id/roadmap" element={
+            <PrivateRoute>
+              <Layout>
+                <BusinessRoadmap />
               </Layout>
             </PrivateRoute>
           } />
@@ -89,6 +103,23 @@ function App() {
               </Layout>
             </PrivateRoute>
           } />
+          <Route path="/business/analysis" element={
+            <PrivateRoute>
+              <Layout>
+                <BusinessAnalysisView />
+              </Layout>
+            </PrivateRoute>
+          } />
+          <Route
+            path="/analytics"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <Analytics />
+                </Layout>
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
