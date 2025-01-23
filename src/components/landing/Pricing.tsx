@@ -148,7 +148,7 @@ export const Pricing = () => {
         <div className="mt-16 text-center">
           <p className="text-gray-400">
             All plans include core features. Need a custom solution?{' '}
-            <a href="mailto:sales@bizintel.ai" className="text-blue-400 hover:text-blue-300 font-medium">
+            <a href="mailto:ashaheen+bizintel@workhub.ai" className="text-blue-400 hover:text-blue-300 font-medium">
               Contact our sales team
             </a>
           </p>
